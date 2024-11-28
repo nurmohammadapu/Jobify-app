@@ -22,7 +22,7 @@ app.use(cookieParser());
 // CORS Configuration
 const allowedOrigins = [
   "http://localhost:5173", // Local development
-  "https://jobify-liard.vercel.app", // Deployed frontend
+  "https://jobify-app-rho.vercel.app/", // Deployed frontend
 ];
 
 const corsOptions = {
