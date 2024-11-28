@@ -192,7 +192,7 @@ export const login = async (req, res) => {
             profile: user.profile,
         };
 
-        // Set token in cookie and send response
+        // Set token in cookie
         res.cookie("token", token, {
             maxAge: 24 * 60 * 60 * 1000, // 1 day
             httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
@@ -200,9 +200,11 @@ export const login = async (req, res) => {
             sameSite: "strict", // Restricts cookie to same-origin requests
         });
 
+        // Send token and user data in response
         return res.status(200).json({
             message: `Welcome back, ${responseData.fullname}!`,
             user: responseData,
+            token: token,  // Send the token in the response body
             success: true,
         });
 
