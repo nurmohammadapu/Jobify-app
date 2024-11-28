@@ -10,7 +10,7 @@ import applicationRoute from "./routes/application.route.js";
 import aiRoute from "./routes/aiRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
-dotenv.config({});
+dotenv.config();
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.use(cookieParser());
 // CORS Configuration
 const allowedOrigins = [
   "http://localhost:5173", // Local development
-  "https://jobify-app-rho.vercel.app/", // Deployed frontend
+  "https://jobify-app-rho.vercel.app", // Deployed frontend (no trailing slash)
 ];
 
 const corsOptions = {
@@ -37,7 +37,11 @@ const corsOptions = {
   credentials: true, // Allow cookies and authorization headers
 };
 
+// Apply CORS middleware
 app.use(cors(corsOptions));
+
+// Optionally handle preflight requests for CORS
+app.options('*', cors(corsOptions)); // Handles OPTIONS preflight requests
 
 const PORT = process.env.PORT || 3000;
 
