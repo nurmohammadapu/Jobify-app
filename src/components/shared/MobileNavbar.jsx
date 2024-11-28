@@ -82,7 +82,7 @@ const MobileNavbar = () => {
                                         </div>
                                     </div>
                                     <div className="flex flex-col my-2 text-gray-600">
-                                        {user && user.role === 'student' && (
+                                        {user && user.role === 'employer' && (
                                             <div className='flex items-center gap-2'>
                                                 <User2 />
                                                 <Button variant="link">
