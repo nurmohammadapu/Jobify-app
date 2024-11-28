@@ -147,7 +147,7 @@ export const login = async (req, res) => {
         // Validate input
         if (!email || !password) {
             return res.status(400).json({
-                message: "Something is missing",
+                message: "Email and password are required.",
                 success: false,
             });
         }
@@ -173,7 +173,7 @@ export const login = async (req, res) => {
         // Check if the user is a recruiter and account is not approved
         if (user.role === "recruiter" && !user.approved) {
             return res.status(403).json({
-                message: "Your account is pending approval from a super admin. Please wait for approval.",
+                message: "Your account is pending approval by a super admin. Please wait for approval.",
                 success: false,
             });
         }
@@ -183,7 +183,7 @@ export const login = async (req, res) => {
         const token = jwt.sign(tokenData, process.env.SECRET_KEY, { expiresIn: "1d" });
 
         // Prepare user data for response
-        user = {
+        const responseData = {
             _id: user._id,
             fullname: user.fullname,
             email: user.email,
@@ -192,23 +192,29 @@ export const login = async (req, res) => {
             profile: user.profile,
         };
 
-        // Send response
-        return res
-            .status(200)
-            .cookie("token", token, { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true, sameSite: "strict" })
-            .json({
-                message: `Welcome back, ${user.fullname}`,
-                user,
-                success: true,
-            });
+        // Set token in cookie and send response
+        res.cookie("token", token, {
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            httpOnly: true, // Prevents client-side JavaScript from accessing the cookie
+            secure: process.env.NODE_ENV === "production", // Ensures cookie is sent only over HTTPS in production
+            sameSite: "strict", // Restricts cookie to same-origin requests
+        });
+
+        return res.status(200).json({
+            message: `Welcome back, ${responseData.fullname}!`,
+            user: responseData,
+            success: true,
+        });
+
     } catch (error) {
-        console.log("Login Error:", error);
-        res.status(500).json({
-            message: "An error occurred during login.",
+        console.error("Login Error:", error.message);
+        return res.status(500).json({
+            message: "An error occurred during login. Please try again later.",
             success: false,
         });
     }
 };
+
 
 
 export const logout = async (req, res) => {
