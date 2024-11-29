@@ -19,7 +19,7 @@ const isAuthenticated = async (req, res, next) => {
             console.log("Decoded Token:", decoded);
 
             req.user = decoded;
-            req.id = decoded.id; 
+            req.id = decoded.userId; 
         } catch (err) {
             return res.status(401).json({
                 success: false,
