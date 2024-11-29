@@ -10,9 +10,11 @@ import { setUser } from '@/redux/authSlice'
 import { toast } from 'sonner'
 
 const UpdateProfileDialog = ({ open, setOpen }) => {
+
     const [loading, setLoading] = useState(false);
     const { user,token } = useSelector(store => store.auth);
     const USER_API_END_POINT = import.meta.env.VITE_USER_API_END_POINT;
+
     const [input, setInput] = useState({
         fullname: user?.fullname || "",
         email: user?.email || "",
@@ -21,6 +23,7 @@ const UpdateProfileDialog = ({ open, setOpen }) => {
         skills: user?.profile?.skills?.map(skill => skill) || "",
         file: user?.profile?.resume || ""
     });
+    
     const dispatch = useDispatch();
 
     const changeEventHandler = (e) => {

@@ -11,13 +11,12 @@ import { setSingleCompany } from '@/redux/companySlice'
 
 
 const CompanyCreate = () => {
+
     const navigate = useNavigate();
     const [companyName, setCompanyName] = useState();
     const dispatch = useDispatch();
     const COMPANY_API_END_POINT = import.meta.env.VITE_COMPANY_API_END_POINT;
     const { token } = useSelector((store) => store.auth);
-
-    console.log(token);
 
 
     const registerNewCompany = async () => {
@@ -26,8 +25,7 @@ const CompanyCreate = () => {
             return;
         }
     
-        console.log('Token:', token);
-        console.log('Company Name:', companyName);
+
     
         try {
             const res = await axios.post(`${COMPANY_API_END_POINT}/register`, { companyName }, {

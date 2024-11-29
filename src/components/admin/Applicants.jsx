@@ -7,11 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setAllApplicants } from '@/redux/applicationSlice';
 
 const Applicants = () => {
+
     const { token } = useSelector((store) => store.auth);
     const params = useParams();
     const dispatch = useDispatch();
     const {applicants} = useSelector(store=>store.application);
     const APPLICATION_API_END_POINT = import.meta.env.VITE_APPLICATION_API_END_POINT;
+
     useEffect(() => {
         const fetchAllApplicants = async () => {
             try {
@@ -25,6 +27,7 @@ const Applicants = () => {
         }
         fetchAllApplicants();
     }, []);
+    
     return (
         <div>
             <Navbar />

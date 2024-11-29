@@ -13,7 +13,9 @@ const JobDescription = () => {
     const {user} = useSelector(store=>store.auth);
     const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
     const [isApplied, setIsApplied] = useState(isIntiallyApplied);
+
     const { token } = useSelector((store) => store.auth);
+
     const APPLICATION_API_END_POINT = import.meta.env.VITE_APPLICATION_API_END_POINT;
     const JOB_API_END_POINT = import.meta.env.VITE_JOB_API_END_POINT;
     
