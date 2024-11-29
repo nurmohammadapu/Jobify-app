@@ -6,36 +6,56 @@ import { Button } from '../ui/button'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { toast } from 'sonner'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setSingleCompany } from '@/redux/companySlice'
+
 
 const CompanyCreate = () => {
     const navigate = useNavigate();
     const [companyName, setCompanyName] = useState();
     const dispatch = useDispatch();
     const COMPANY_API_END_POINT = import.meta.env.VITE_COMPANY_API_END_POINT;
+    const { token } = useSelector((store) => store.auth);
+
+    console.log(token);
+
+
     const registerNewCompany = async () => {
+        if (!token) {
+            toast.error("Authorization token is missing.");
+            return;
+        }
+    
+        console.log('Token:', token);
+        console.log('Company Name:', companyName);
+    
         try {
-            const res = await axios.post(`${COMPANY_API_END_POINT}/register`, {companyName}, {
-                headers:{
-                    'Content-Type':'application/json'
+            const res = await axios.post(`${COMPANY_API_END_POINT}/register`, { companyName }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'application/json',
                 },
-                withCredentials:true
+                withCredentials: true,
             });
-            if(res?.data?.success){
+    
+            if (res?.data?.success) {
                 dispatch(setSingleCompany(res.data.company));
                 toast.success(res.data.message);
                 const companyId = res?.data?.company?._id;
                 navigate(`/admin/companies/${companyId}`);
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
             const errorMessage =
-            error?.response?.data?.message || "Failed to register the company. Please try again later.";
-        
-        toast.error(errorMessage);
+                error?.response?.data?.message ||
+                error?.message ||
+                "Failed to register the company. Please try again later.";
+            toast.error(errorMessage);
         }
-    }
+    };
+    
+
+
     return (
         <div>
             <Navbar />

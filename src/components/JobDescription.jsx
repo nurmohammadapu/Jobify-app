@@ -13,7 +13,7 @@ const JobDescription = () => {
     const {user} = useSelector(store=>store.auth);
     const isIntiallyApplied = singleJob?.applications?.some(application => application.applicant === user?._id) || false;
     const [isApplied, setIsApplied] = useState(isIntiallyApplied);
-
+    const { token } = useSelector((store) => store.auth);
     const APPLICATION_API_END_POINT = import.meta.env.VITE_APPLICATION_API_END_POINT;
     const JOB_API_END_POINT = import.meta.env.VITE_JOB_API_END_POINT;
     
@@ -22,8 +22,11 @@ const JobDescription = () => {
     const dispatch = useDispatch();
 
     const applyJobHandler = async () => {
+        console.log("Authorization Token: ", token); 
         try {
-            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {withCredentials:true});
+            const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${jobId}`, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials:true});
             
             if(res.data.success){
                 setIsApplied(true); // Update the local state
@@ -41,7 +44,10 @@ const JobDescription = () => {
     useEffect(()=>{
         const fetchSingleJob = async () => {
             try {
-                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{withCredentials:true});
+                const res = await axios.get(`${JOB_API_END_POINT}/get/${jobId}`,{   
+                    headers: { Authorization: `Bearer ${token}` },
+                    withCredentials:true
+                });
                 if(res.data.success){
                     dispatch(setSingleJob(res.data.job));
                     setIsApplied(res.data.job.applications.some(application=>application.applicant === user?._id)) // Ensure the state is in sync with fetched data
@@ -56,7 +62,7 @@ const JobDescription = () => {
     return (
         <div>
             <Navbar/>
-        <div className='max-w-7xl mx-auto my-10'>
+        <div className="mx-auto my-10 w-11/12 md:max-w-xl">
             
             <div className='flex items-center justify-between'>
                 <div>

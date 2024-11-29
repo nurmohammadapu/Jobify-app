@@ -14,6 +14,7 @@ import { Textarea } from '../ui/textarea';
 const CompanySetup = () => {
     const params = useParams();
     useGetCompanyById(params.id);
+    const { token } = useSelector((store) => store.auth);
     const [input, setInput] = useState({
         name: "",
         description: "",
@@ -49,6 +50,7 @@ const CompanySetup = () => {
             setLoading(true);
             const res = await axios.put(`${COMPANY_API_END_POINT}/update/${params.id}`, formData, {
                 headers: {
+                  Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data'
                 },
                 withCredentials: true

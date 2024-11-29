@@ -24,6 +24,7 @@ const PostJob = () => {
         position: 0,
         companyId: ""
     });
+    const { token } = useSelector((store) => store.auth);
     const JOB_API_END_POINT = import.meta.env.VITE_JOB_API_END_POINT;
     const [loading, setLoading]= useState(false);
     const navigate = useNavigate();
@@ -44,6 +45,7 @@ const PostJob = () => {
             setLoading(true);
             const res = await axios.post(`${JOB_API_END_POINT}/post`, input,{
                 headers:{
+                  Authorization: `Bearer ${token}`,
                     'Content-Type':'application/json'
                 },
                 withCredentials:true
