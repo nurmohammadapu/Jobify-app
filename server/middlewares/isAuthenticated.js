@@ -2,10 +2,10 @@ import jwt from "jsonwebtoken";
 
 const isAuthenticated = async (req, res, next) => {
     try {
-        // get token 
+        // Get the token from cookies, body, or headers
         const token = req.cookies.token || req.body.token || req.header("Authorization")?.replace("Bearer ", "");
 
-        // if token missing then return response 
+        // If the token is missing, return an error response
         if (!token) {
             return res.status(401).json({
                 success: false,
@@ -13,25 +13,28 @@ const isAuthenticated = async (req, res, next) => {
             });
         }
 
-        // verify the token  
+        // Verify and decode the token
         try {
-            const decode = jwt.verify(token, process.env.SECRET_KEY);
-            console.log(decode);
-            req.user = decode;
+            const decoded = jwt.verify(token, process.env.SECRET_KEY);
+            console.log("Decoded Token:", decoded);
+
+            req.user = decoded;
+            req.id = decoded.id; 
         } catch (err) {
             return res.status(401).json({
                 success: false,
                 message: "Invalid token",
-                error: err.message,  // Include the error message from JWT verification
+                error: err.message, 
             });
         }
+
         next();
     } catch (err) {
         console.log(err);
         return res.status(401).json({
             success: false,
             message: "Something went wrong while validating the token",
-            error: err.message,  // Include the error message for debugging
+            error: err.message, 
         });
     }
 };
