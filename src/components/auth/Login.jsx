@@ -130,7 +130,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "sonner"; // For notifications
 import { useDispatch, useSelector } from "react-redux";
-import { setLoading, setUser, setError } from "@/redux/authSlice";
+import { setLoading, setUser, setError, setToken } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
@@ -163,7 +163,8 @@ const Login = () => {
       });
 
       if (res.data.success) {
-        dispatch(setUser(res.data.user)); // Set user in Redux
+        dispatch(setUser(res.data.user));
+        dispatch(setToken(res.data.token)) 
         navigate("/"); // Redirect to home page
         toast.success(res.data.message); // Success notification
       }
@@ -231,8 +232,7 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Error Display */}
-          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
 
           {/* Submit Button */}
           {loading ? (
